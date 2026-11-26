@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FFFDF7;
+    color: #2C2A29;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-image: radial-gradient(#DED4BE 1.25px, transparent 1.25px);
+    background-size: 22px 22px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Keep ALL text clean, sharp, and readable */
+.font-hand {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Genuine Hand-Drawn Marker (Outer) + Clean Readable Inner Elements:
+ * - Softly rounded corners (`22px 26px 24px 20px`)
+ * - Wobble filter ONLY on `::before` and `::after` border layers so text stays 100% crisp.
+ */
+.doodle-card {
+  position: relative;
+  background-color: #FFFFFF;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 22px 26px 24px 20px / 24px 20px 26px 22px;
+  z-index: 0;
+}
+
+.doodle-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 5.5px solid #2C2A29;
+  border-radius: 22px 26px 24px 20px / 24px 20px 26px 22px;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-card::after {
+  content: '';
+  position: absolute;
+  inset: 2px -1.5px -1.5px 2px;
+  border: 2px solid rgba(44, 42, 41, 0.38);
+  border-radius: 25px 20px 22px 26px / 20px 25px 22px 24px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-card .doodle-card::before {
+  border-width: 2px;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+}
+
+.doodle-card .border-2.border-ink,
+.doodle-card .border.border-ink {
+  position: relative;
+  border-color: transparent !important;
+  z-index: 0;
+}
+
+.doodle-card .border-2.border-ink::before,
+.doodle-card .border.border-ink::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 2.3px solid #2C2A29;
+  border-radius: inherit;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-card .border-2.border-ink::after {
+  content: '';
+  position: absolute;
+  inset: 0.5px -1.5px -1.5px 0.5px;
+  border: 1px solid rgba(44, 42, 41, 0.28);
+  border-radius: inherit;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-btn {
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  transition: transform 0.15s ease;
+  z-index: 0;
+}
+
+.doodle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3.5px solid #2C2A29;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-btn::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px -1.5px -1.5px 1.5px;
+  border: 1.2px dashed rgba(44, 42, 41, 0.28);
+  border-radius: 18px 15px 20px 16px / 15px 18px 16px 20px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-btn:hover {
+  transform: translateY(-1px);
+}
+
+.doodle-btn:active {
+  transform: translateY(1px);
+}
+
+.shadow-doodle,
+.shadow-doodle-sm,
+.shadow-doodle-lg {
+  box-shadow: none !important;
+}
+
+.washi-tape {
+  background: rgba(255, 224, 102, 0.82);
+  border: 1.5px dashed rgba(44, 42, 41, 0.45);
+  border-radius: 8px;
+  transform: rotate(-1.5deg);
+}

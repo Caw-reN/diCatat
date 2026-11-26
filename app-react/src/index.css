@@ -1,0 +1,491 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FFFDF7;
+    color: #2C2A29;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-image: radial-gradient(#DED4BE 1.25px, transparent 1.25px);
+    background-size: 22px 22px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/*
+ * Keep ALL text clean, sharp, and highly readable using Plus Jakarta Sans / Fredoka.
+ * Override font-hand so small labels and descriptions never look blurry or hard to read.
+ */
+.font-hand {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Genuine Hand-Drawn Marker (Outer) + Clean Readable Inner Elements:
+ * - Softly rounded corners (`22px 26px 24px 20px`) instead of boxy 255px/15px corners.
+ * - SVG wobble filter is ONLY applied to `::before` and `::after` border layers,
+ *   NEVER to the element itself so text stays 100% crisp and sharp!
+ */
+
+.doodle-card,
+.doodle-border,
+.doodle-border-alt {
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 22px 26px 24px 20px / 24px 20px 26px 22px;
+}
+
+/* elevate any card that currently has an open dropdown or datepicker inside it */
+.doodle-card:focus-within,
+.doodle-card .border-2.border-ink:focus-within {
+  z-index: 30;
+}
+
+/* OUTER CARD = BOLD FELT-TIP MARKER (Spidol Tebal 5.5px) with softly rounded corners */
+.doodle-card::before,
+.doodle-border::before,
+.doodle-border-alt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 5.5px solid #2C2A29;
+  border-radius: 22px 26px 24px 20px / 24px 20px 26px 22px;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Second marker pass on outer card */
+.doodle-card::after {
+  content: '';
+  position: absolute;
+  inset: 2px -1.5px -1.5px 2px;
+  border: 2px solid rgba(44, 42, 41, 0.38);
+  border-radius: 25px 20px 22px 26px / 20px 25px 22px 24px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* INNER cards inside an outer `.doodle-card` use a thinner pen line (2px) */
+.doodle-card .doodle-card::before,
+.doodle-card .doodle-border::before {
+  border-width: 2px;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+}
+
+.doodle-card .doodle-card::after {
+  border-width: 1px;
+  border-color: rgba(44, 42, 41, 0.22);
+}
+
+/* Hand-drawn buttons with softly rounded marker outline */
+.doodle-btn {
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  transition: transform 0.15s ease;
+  z-index: 0;
+}
+
+.doodle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3.5px solid #2C2A29;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-btn::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px -1.5px -1.5px 1.5px;
+  border: 1.2px dashed rgba(44, 42, 41, 0.28);
+  border-radius: 18px 15px 20px 16px / 15px 18px 16px 20px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-btn:hover {
+  transform: translateY(-1px);
+}
+
+.doodle-btn:active {
+  transform: translateY(1px);
+}
+
+/* Hand-drawn input field — wrapped in .doodle-field or standalone */
+.doodle-field {
+  position: relative;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  background-color: #FFFDF7;
+  z-index: 0;
+}
+
+.doodle-field::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2.5px solid #2C2A29;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-field::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px -1px -1px 1.5px;
+  border: 1.1px solid rgba(44, 42, 41, 0.28);
+  border-radius: 18px 15px 20px 16px / 15px 18px 16px 20px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-field:focus-within {
+  background-color: #FFFFFF;
+}
+
+.doodle-field:focus-within::before {
+  border-width: 3px;
+  border-style: dashed;
+}
+
+.doodle-input {
+  background-color: transparent;
+  border: none !important;
+  border-radius: 16px 20px 18px 15px / 18px 15px 20px 16px;
+  box-shadow: none !important;
+}
+
+.doodle-input:focus {
+  outline: none;
+}
+
+/* Hand-Drawn Sub-Items (Numpad Keys, Category Buttons, Transaction Rows, Wallet Cards, Calendar Cells) */
+.doodle-item {
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 16px 20px 15px 19px / 19px 15px 20px 16px;
+  transition: transform 0.12s ease, background-color 0.12s ease;
+  z-index: 0;
+}
+
+.doodle-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2.4px solid #2C2A29;
+  border-radius: 16px 20px 15px 19px / 19px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-item::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px -1px -1px 1.5px;
+  border: 1px solid rgba(44, 42, 41, 0.28);
+  border-radius: 19px 15px 18px 16px / 15px 19px 16px 18px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Selected / Active state for Category pill or Wallet card (thick marker + dashed sketch) */
+.doodle-item-active {
+  position: relative;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 16px 20px 15px 19px / 19px 15px 20px 16px;
+  z-index: 0;
+}
+
+.doodle-item-active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3.4px solid #2C2A29;
+  border-radius: 16px 20px 15px 19px / 19px 15px 20px 16px;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-item-active::after {
+  content: '';
+  position: absolute;
+  inset: 2px -1.5px -1.5px 2px;
+  border: 1.4px dashed rgba(44, 42, 41, 0.45);
+  border-radius: 19px 15px 18px 16px / 15px 19px 16px 18px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.shadow-doodle,
+.shadow-doodle-sm,
+.shadow-doodle-lg {
+  box-shadow: none !important;
+}
+
+/* Inner pills & badges: wobbly border only on ::before so text inside is 100% sharp */
+.wobbly-box {
+  position: relative;
+  border: none !important;
+  border-radius: 9999px;
+}
+
+.wobbly-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.8px solid #2C2A29;
+  border-radius: 9999px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+}
+
+/*
+ * Automatic Hand-Drawn Wobbly Borders for ALL inner elements inside `.doodle-card`!
+ * By rendering the wobbly border on `::before` and `::after` pseudo-elements instead of the
+ * element itself, the border wobbles like a real marker/pen sketch while all text inside
+ * stays 100% crisp and sharp!
+ */
+.doodle-card .border-2.border-ink,
+.doodle-card .border.border-ink {
+  position: relative;
+  border-color: transparent !important;
+}
+
+.doodle-card .border-2.border-ink::before,
+.doodle-card .border.border-ink::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 2.3px solid #2C2A29;
+  border-radius: inherit;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-card .border-2.border-ink::after {
+  content: '';
+  position: absolute;
+  inset: 0.5px -1.5px -1.5px 0.5px;
+  border: 1px solid rgba(44, 42, 41, 0.28);
+  border-radius: inherit;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Notebook tape effect */
+.washi-tape {
+  background: rgba(255, 224, 102, 0.85);
+  border: 1.5px dashed rgba(44, 42, 41, 0.45);
+  border-radius: 8px;
+  transform: rotate(-1.5deg);
+}
+
+/* Hand-Drawn Torn Notebook Paper Sheet for Receipt Celebration Card */
+.doodle-notebook-sheet {
+  position: relative;
+  background-color: #FFFDF7;
+  /* Horizontal notebook ruled blue/sepia lines + left red margin line */
+  background-image:
+    linear-gradient(90deg, transparent 26px, rgba(242, 95, 107, 0.28) 26px, rgba(242, 95, 107, 0.28) 28px, transparent 28px),
+    repeating-linear-gradient(
+      to bottom,
+      #FFFDF7 0px,
+      #FFFDF7 27px,
+      rgba(160, 196, 255, 0.35) 27px,
+      rgba(160, 196, 255, 0.35) 28.5px
+    );
+  border: none !important;
+  border-radius: 18px 20px 6px 6px;
+  box-shadow: 0 14px 28px rgba(44, 42, 41, 0.18);
+  z-index: 0;
+}
+
+.doodle-notebook-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-top: 5px solid #2C2A29;
+  border-left: 5px solid #2C2A29;
+  border-right: 5px solid #2C2A29;
+  border-bottom: 3px dashed rgba(44, 42, 41, 0.4);
+  border-radius: 18px 20px 6px 6px;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-notebook-sheet::after {
+  content: '';
+  position: absolute;
+  inset: 2px -1.5px 0 2px;
+  border-top: 2px solid rgba(44, 42, 41, 0.35);
+  border-left: 2px solid rgba(44, 42, 41, 0.35);
+  border-right: 2px solid rgba(44, 42, 41, 0.35);
+  border-radius: 20px 18px 6px 6px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hand-Drawn Mobile Bottom Navigation Bar (wobbly thick marker top line) */
+.doodle-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #FFFDF7;
+  border: none !important;
+}
+
+.doodle-bottom-nav::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -8px;
+  right: -8px;
+  height: 10px;
+  border-top: 5px solid #2C2A29;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-bottom-nav::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: -8px;
+  right: -8px;
+  height: 6px;
+  border-top: 2px solid rgba(44, 42, 41, 0.35);
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hand-Drawn Desktop Sidebar right border */
+.doodle-sidebar {
+  position: relative;
+  border: none !important;
+}
+
+.doodle-sidebar::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  right: -2px;
+  width: 10px;
+  border-right: 5px solid #2C2A29;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Hand-Drawn Active Tab Box in Bottom Nav & Sidebar */
+.doodle-nav-active {
+  position: relative;
+  background-color: #FFF3B0;
+  border: none !important;
+  border-radius: 16px 20px 15px 18px / 18px 15px 20px 16px;
+  z-index: 0;
+}
+
+.doodle-nav-active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2.5px solid #2C2A29;
+  border-radius: 16px 20px 15px 18px / 18px 15px 20px 16px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-nav-active::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px -1px -1px 1.5px;
+  border: 1.2px dashed rgba(44, 42, 41, 0.35);
+  border-radius: 18px 15px 20px 16px / 15px 18px 16px 20px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Hand-Drawn Floating Quick Add (+) Button in Bottom Nav */
+.doodle-fab {
+  position: relative;
+  background-color: #FFE066;
+  border: none !important;
+  border-radius: 20px 24px 19px 22px / 22px 19px 24px 20px;
+  transition: transform 0.15s ease;
+  z-index: 10;
+}
+
+.doodle-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 4.8px solid #2C2A29;
+  border-radius: 20px 24px 19px 22px / 22px 19px 24px 20px;
+  filter: url(#wobble-card);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.doodle-fab::after {
+  content: '';
+  position: absolute;
+  inset: 2px -2px -2px 2px;
+  border: 2px solid rgba(44, 42, 41, 0.42);
+  border-radius: 23px 18px 22px 20px / 18px 23px 20px 22px;
+  filter: url(#wobble-sketch);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doodle-fab:hover {
+  transform: translateY(-2px) rotate(-2deg) scale(1.03);
+}
+
+.doodle-fab:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF6EE;
+}
+::-webkit-scrollbar-thumb {
+  background: #D5CBB8;
+  border-radius: 999px;
+}

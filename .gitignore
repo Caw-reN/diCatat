@@ -1,0 +1,34 @@
+# Dependencies & Build Outputs
+node_modules/
+**/node_modules/
+app-react/dist/
+landing-nextjs/.next/
+landing-nextjs/out/
+backend-laravel/vendor/
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+**/backend-laravel/.env
+**/app-react/.env
+**/landing-nextjs/.env
+
+# Laravel Runtime & Storage
+backend-laravel/storage/app/public/receipts/*
+!backend-laravel/storage/app/public/.gitignore
+backend-laravel/storage/framework/cache/data/*
+backend-laravel/storage/framework/sessions/*
+backend-laravel/storage/framework/Testing/*
+backend-laravel/storage/framework/views/*.php
+backend-laravel/storage/logs/*.log
+backend-laravel/bootstrap/cache/*.php
+backend-laravel/public/storage
+backend-laravel/public/hot
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log

@@ -32,3 +32,8 @@ Thumbs.db
 .idea/
 .vscode/
 *.log
+
+# Local Private Deployment Notes
+deploy.md
+
+

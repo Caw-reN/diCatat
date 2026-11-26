@@ -59,11 +59,14 @@ interface AdminStats {
   }[];
 }
 
+const currentBrowserOrigin =
+  typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173';
+
 const DEFAULT_SETTINGS: AdminSettingsState = {
   google_oauth_enabled: '1',
   google_client_id: '',
   google_client_secret: '',
-  google_redirect_uri: 'http://localhost:5173/auth/google/callback',
+  google_redirect_uri: `${currentBrowserOrigin}/auth/google/callback`,
   google_auth_url: 'https://accounts.google.com/o/oauth2/v2/auth',
 
   ai_scanner_enabled: '1',
@@ -75,8 +78,8 @@ const DEFAULT_SETTINGS: AdminSettingsState = {
 
   app_name: 'diCatat.',
   app_tagline: 'Buku Jurnal Keuangan Si Oren',
-  frontend_url: 'http://localhost:5173',
-  backend_api_url: 'http://127.0.0.1:8000/api',
+  frontend_url: currentBrowserOrigin,
+  backend_api_url: `${currentBrowserOrigin}/api`,
   default_monthly_budget: '3000000',
   allow_registration: '1',
 };

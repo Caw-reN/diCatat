@@ -50,13 +50,19 @@ export const AuthGateScreen: React.FC = () => {
     // Clean URL query params so refreshing doesn't re-exchange
     window.history.replaceState({}, document.title, '/');
     setIsLoading(true);
-    let savedRedirectUri: string | undefined = undefined;
+    let savedRedirectUri = `${window.location.origin}/auth/google/callback`;
     try {
       const cached = localStorage.getItem('dicatat_admin_settings_cache');
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed.google_redirect_uri) {
-          savedRedirectUri = parsed.google_redirect_uri.trim();
+        const candidate = (parsed.google_redirect_uri || '').trim();
+        const isCurrentDomainPublic =
+          window.location.hostname !== 'localhost' &&
+          window.location.hostname !== '127.0.0.1';
+        const isCandidateLocal =
+          candidate.includes('localhost') || candidate.includes('127.0.0.1');
+        if (candidate && !(isCurrentDomainPublic && isCandidateLocal)) {
+          savedRedirectUri = candidate;
         }
       }
     } catch {
@@ -74,8 +80,13 @@ export const AuthGateScreen: React.FC = () => {
   const handleGoogleButtonClick = async () => {
     setErrorMsg(null);
     // Check if Admin configured a real Google Client ID in /admin
+    const currentOriginCallback = `${window.location.origin}/auth/google/callback`;
+    const isCurrentDomainPublic =
+      window.location.hostname !== 'localhost' &&
+      window.location.hostname !== '127.0.0.1';
+
     let clientId = '';
-    let redirectUri = `${window.location.origin}/auth/google/callback`;
+    let redirectUri = currentOriginCallback;
     let authUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
 
     try {
@@ -87,7 +98,14 @@ export const AuthGateScreen: React.FC = () => {
         if (data.settings) {
           localStorage.setItem('dicatat_admin_settings_cache', JSON.stringify(data.settings));
           clientId = (data.settings.google_client_id || '').trim();
-          redirectUri = (data.settings.google_redirect_uri || redirectUri).trim();
+          const candidateUri = (data.settings.google_redirect_uri || '').trim();
+          const isCandidateLocal =
+            candidateUri.includes('localhost') || candidateUri.includes('127.0.0.1');
+          // Auto-use current public domain if database still has default localhost redirect URI
+          redirectUri =
+            candidateUri && !(isCurrentDomainPublic && isCandidateLocal)
+              ? candidateUri
+              : currentOriginCallback;
           authUrl = (data.settings.google_auth_url || authUrl).trim();
         }
       }
@@ -98,7 +116,13 @@ export const AuthGateScreen: React.FC = () => {
         if (cached) {
           const parsed = JSON.parse(cached);
           clientId = (parsed.google_client_id || '').trim();
-          redirectUri = (parsed.google_redirect_uri || redirectUri).trim();
+          const candidateUri = (parsed.google_redirect_uri || '').trim();
+          const isCandidateLocal =
+            candidateUri.includes('localhost') || candidateUri.includes('127.0.0.1');
+          redirectUri =
+            candidateUri && !(isCurrentDomainPublic && isCandidateLocal)
+              ? candidateUri
+              : currentOriginCallback;
           authUrl = (parsed.google_auth_url || authUrl).trim();
         }
       } catch {

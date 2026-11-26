@@ -17,10 +17,18 @@ class AuthController extends Controller
 {
     public function googleBackendCallback(Request $request)
     {
-        $frontendUrl = rtrim(
-            SystemSetting::getValue('frontend_url', 'http://localhost:5173') ?: 'http://localhost:5173',
+        $savedFrontend = rtrim(
+            SystemSetting::getValue('frontend_url', '') ?: '',
             '/'
         );
+        $currentOrigin = $request->getSchemeAndHttpHost();
+        $isCurrentPublic = !str_contains($currentOrigin, 'localhost') && !str_contains($currentOrigin, '127.0.0.1');
+        $isSavedLocal = str_contains($savedFrontend, 'localhost') || str_contains($savedFrontend, '127.0.0.1');
+
+        $frontendUrl = ($savedFrontend && !($isCurrentPublic && $isSavedLocal))
+            ? $savedFrontend
+            : $currentOrigin;
+
         $queryString = $request->getQueryString();
 
         return redirect()->away(

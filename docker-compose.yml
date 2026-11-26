@@ -1,0 +1,48 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: dicatat-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: dicatat
+      MYSQL_USER: dicatat_user
+      MYSQL_PASSWORD: DicatatSecret2026!
+      MYSQL_ROOT_PASSWORD: DicatatRootSecret2026!
+      TZ: Asia/Jakarta
+    volumes:
+      - dicatat_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "dicatat_user", "-pDicatatSecret2026!"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dicatat-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      APP_NAME: diCatat
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: dicatat
+      DB_USERNAME: dicatat_user
+      DB_PASSWORD: DicatatSecret2026!
+      TZ: Asia/Jakarta
+    volumes:
+      - dicatat_receipts_storage:/var/www/dicatat/backend-laravel/storage/app/public
+
+volumes:
+  dicatat_mysql_data:
+  dicatat_receipts_storage:

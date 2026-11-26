@@ -1,0 +1,9 @@
+node_modules
+**/node_modules
+app-react/dist
+landing-nextjs/.next
+backend-laravel/vendor
+.git
+.env
+backend-laravel/.env
+deploy.md
